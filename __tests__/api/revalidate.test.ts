@@ -196,6 +196,44 @@ describe("POST /api/revalidate", () => {
     expect(mockRevalidatePath).toHaveBeenCalledWith("/", "layout");
   });
 
+  it("accepts WordPress plugin payload (type + data.id)", async () => {
+    const { POST } = await import("@/app/api/revalidate/route");
+    const req = createRequest(
+      { type: "post", data: { id: 42, slug: "hello", action: "update" } },
+      "test-secret"
+    );
+    const res = await POST(req);
+
+    expect(res.status).toBe(200);
+    expect(mockRevalidateTag).toHaveBeenCalledWith("post-42", { expire: 0 });
+  });
+
+  it("maps plugin term + category taxonomy to category tags", async () => {
+    const { POST } = await import("@/app/api/revalidate/route");
+    const req = createRequest(
+      { type: "term", data: { id: 5, taxonomy: "category" } },
+      "test-secret"
+    );
+    await POST(req);
+
+    expect(mockRevalidateTag).toHaveBeenCalledWith("category-5", {
+      expire: 0,
+    });
+  });
+
+  it("accepts plugin test ping", async () => {
+    const { POST } = await import("@/app/api/revalidate/route");
+    const req = createRequest(
+      { type: "test", data: { message: "Test from WordPress" } },
+      "test-secret"
+    );
+    const res = await POST(req);
+
+    expect(res.status).toBe(200);
+    const body = await res.json();
+    expect(body.revalidated).toBe(true);
+  });
+
   it("returns revalidated response with timestamp", async () => {
     const { POST } = await import("@/app/api/revalidate/route");
     const req = createRequest({ contentType: "post" }, "test-secret");

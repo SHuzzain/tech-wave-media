@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { contentType, contentId } = requestBody;
+    const { contentType, contentId } = parseWebhookPayload(requestBody);
 
     if (!contentType) {
       return NextResponse.json(
@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
       // Revalidate specific content type tags
       revalidateTag("wordpress", { expire: 0 });
 
-      if (contentType === "post") {
+      if (contentType === "post" || contentType === "page") {
         revalidateTag("posts", { expire: 0 });
         if (contentId) {
           revalidateTag(`post-${contentId}`, { expire: 0 });
@@ -67,6 +67,7 @@ export async function POST(request: NextRequest) {
           revalidateTag(`author-${contentId}`, { expire: 0 });
         }
       }
+      // "test" and unknown types still refresh the wordpress tag + layout below
 
       // Also revalidate the entire layout for safety
       revalidatePath("/", "layout");
@@ -101,4 +102,35 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     );
   }
+}
+
+type WebhookBody = {
+  contentType?: string;
+  contentId?: string | number;
+  type?: string;
+  data?: {
+    id?: string | number;
+    taxonomy?: string;
+  };
+};
+
+function parseWebhookPayload(body: WebhookBody): {
+  contentType: string | undefined;
+  contentId: string | number | undefined;
+} {
+  const rawType = body.contentType ?? body.type;
+  const contentId = body.contentId ?? body.data?.id;
+
+  if (rawType === "term") {
+    const taxonomy = body.data?.taxonomy;
+    if (taxonomy === "category") {
+      return { contentType: "category", contentId };
+    }
+    if (taxonomy === "post_tag") {
+      return { contentType: "tag", contentId };
+    }
+    return { contentType: "term", contentId };
+  }
+
+  return { contentType: rawType, contentId };
 }
