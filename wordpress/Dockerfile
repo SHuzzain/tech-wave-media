@@ -31,5 +31,7 @@ COPY setup.sh /usr/local/bin/setup-wordpress.sh
 COPY entrypoint.sh /usr/local/bin/custom-entrypoint.sh
 RUN chmod +x /usr/local/bin/setup-wordpress.sh /usr/local/bin/custom-entrypoint.sh
 
+EXPOSE 80
+
 ENTRYPOINT ["/usr/local/bin/custom-entrypoint.sh"]
 CMD ["apache2-foreground"]

@@ -6,6 +6,17 @@ This repo is a fork of [9d8dev/next-wp](https://github.com/9d8dev/next-wp). Word
 
 Use Railway’s next-wp template, or install WordPress on Cloudways/a VPS.
 
+### Railway 502 / `AH00534` (Apache will not start)
+
+The stock template image sometimes loads two Apache MPMs and dies. Build WordPress from **this repo** instead:
+
+1. Push this repository to GitHub.
+2. In Railway, open the **WordPress** service → **Settings** → **Source**.
+3. Disconnect the Docker image. Connect this GitHub repo.
+4. Set **Root Directory** to `wordpress` (so it uses `wordpress/Dockerfile`).
+5. Redeploy. Logs should show `Forcing Apache mpm_prefork` and Apache should stay up.
+6. Open `https://YOUR-WP.up.railway.app/wp-admin` and finish the install wizard.
+
 - Site title: **Tech Wave Media**
 - Permalinks: **Post name** (Settings → Permalinks)
 - REST API: default on. Confirm `https://YOUR-WP/wp-json/wp/v2/posts`

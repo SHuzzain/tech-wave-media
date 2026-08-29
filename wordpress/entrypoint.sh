@@ -1,6 +1,28 @@
 #!/bin/bash
 set -euo pipefail
 
+# Apache can only load one MPM. Upstream wordpress images sometimes enable
+# mpm_event and mpm_prefork together (AH00534) and Apache never starts → 502.
+# See https://github.com/9d8dev/next-wp/issues/76
+echo "[setup] Forcing Apache mpm_prefork..."
+a2dismod mpm_event mpm_worker 2>/dev/null || true
+rm -f /etc/apache2/mods-enabled/mpm_event.load \
+      /etc/apache2/mods-enabled/mpm_event.conf \
+      /etc/apache2/mods-enabled/mpm_worker.load \
+      /etc/apache2/mods-enabled/mpm_worker.conf
+a2enmod mpm_prefork 2>/dev/null || true
+
+# Railway injects PORT; stock Apache listens on 80.
+if [ -n "${PORT:-}" ] && [ "${PORT}" != "80" ]; then
+    echo "[setup] Binding Apache to PORT=${PORT}"
+    if [ -f /etc/apache2/ports.conf ]; then
+        sed -i "s/^Listen 80/Listen ${PORT}/" /etc/apache2/ports.conf
+    fi
+    if [ -f /etc/apache2/sites-available/000-default.conf ]; then
+        sed -i "s/:80>/:${PORT}>/" /etc/apache2/sites-available/000-default.conf
+    fi
+fi
+
 # Copy plugin and theme from staging to WordPress (after volume is mounted)
 copy_custom_files() {
     echo "[setup] Waiting for WordPress files..."
