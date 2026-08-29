@@ -59,6 +59,23 @@ const CACHE_TTL = 3600; // 1 hour
 type QueryValue = string | number | boolean | undefined;
 type QueryParams = Record<string, QueryValue>;
 
+/**
+ * Pretty /wp-json URLs 301 into the headless theme HTML on this Railway
+ * install (no working rewrite rules). rest_route always returns JSON.
+ */
+export function buildWordPressApiUrl(path: string, query?: QueryParams): string {
+  if (!baseUrl) {
+    throw new Error("WordPress URL not configured");
+  }
+  const restRoute = path.startsWith("/wp-json")
+    ? path.replace(/^\/wp-json/, "") || "/"
+    : path;
+  return `${baseUrl.replace(/\/$/, "")}/?${querystring.stringify({
+    rest_route: restRoute,
+    ...query,
+  })}`;
+}
+
 // Core fetch - throws on error (for functions that require data)
 async function wordpressFetch<T>(
   path: string,
@@ -69,7 +86,7 @@ async function wordpressFetch<T>(
     throw new Error("WordPress URL not configured");
   }
 
-  const url = `${baseUrl}${path}${query ? `?${querystring.stringify(query)}` : ""}`;
+  const url = buildWordPressApiUrl(path, query);
 
   const response = await fetch(url, {
     headers: { "User-Agent": USER_AGENT },
@@ -114,7 +131,7 @@ async function wordpressFetchPaginated<T>(
     throw new Error("WordPress URL not configured");
   }
 
-  const url = `${baseUrl}${path}${query ? `?${querystring.stringify(query)}` : ""}`;
+  const url = buildWordPressApiUrl(path, query);
 
   const response = await fetch(url, {
     headers: { "User-Agent": USER_AGENT },

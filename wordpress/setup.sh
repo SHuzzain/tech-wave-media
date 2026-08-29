@@ -67,4 +67,8 @@ if [ -n "${NEXTJS_URL:-}" ]; then
     echo "Plugin configured with Next.js URL: $NEXTJS_URL"
 fi
 
+# Pretty /wp-json needs rewrite rules. Flush so REST works if .htaccess is writable.
+wp rewrite structure '/%postname%/' --hard --allow-root 2>/dev/null || true
+wp rewrite flush --hard --allow-root 2>/dev/null || true
+
 echo "WordPress setup complete!"

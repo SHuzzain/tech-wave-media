@@ -45,6 +45,7 @@ describe("WordPress API", () => {
       const fetchUrl = mockFetch.mock.calls[0][0] as string;
       expect(fetchUrl).toContain("slug=hello");
       expect(fetchUrl).toContain("_embed=true");
+      expect(fetchUrl).toContain("rest_route=%2Fwp%2Fv2%2Fposts");
     });
 
     it("returns undefined when no post matches", async () => {
@@ -217,7 +218,7 @@ describe("WordPress API", () => {
 
       expect(result).toEqual(authors);
       const fetchUrl = mockFetch.mock.calls[0][0] as string;
-      expect(fetchUrl).toContain("/users");
+      expect(fetchUrl).toContain("rest_route=%2Fwp%2Fv2%2Fusers");
     });
   });
 

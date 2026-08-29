@@ -57,7 +57,7 @@ export async function getRankMathHead(
   if (!baseUrl) return null;
 
   try {
-    const endpoint = `${baseUrl}/wp-json/rankmath/v1/getHead?url=${encodeURIComponent(publicUrl)}`;
+    const endpoint = `${baseUrl.replace(/\/$/, "")}/?rest_route=/rankmath/v1/getHead&url=${encodeURIComponent(publicUrl)}`;
     const response = await fetch(endpoint, {
       headers: { "User-Agent": "Next.js WordPress Client" },
       next: { tags: ["wordpress", "rankmath"], revalidate: 3600 },
