@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { MobileNav } from "@/components/nav/mobile-nav";
 import { categoryMenu, contentMenu } from "@/menu.config";
 import { SiteLogo } from "@/components/layout/site-logo";
+import { ThemeToggle } from "@/components/theme/theme-toggle";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 
@@ -20,16 +21,17 @@ export function Nav({ className, children, id }: NavProps) {
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <div className="flex justify-between items-center py-3 gap-4">
           <Link className="hover:opacity-80 transition-opacity shrink-0" href="/">
-            <SiteLogo />
+            <SiteLogo className="max-h-16" height={64} />
           </Link>
           {children}
           <div className="flex items-center gap-2">
             <Button asChild variant="ghost" size="sm" className="hidden sm:flex">
-              <Link href="/posts">Search posts</Link>
+              <Link href="/posts?focus=search">Search posts</Link>
             </Button>
             <Button asChild size="sm" className="hidden sm:flex">
               <Link href="/write-for-us">Write for Us</Link>
             </Button>
+            <ThemeToggle />
             <MobileNav />
           </div>
         </div>
