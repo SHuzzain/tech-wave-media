@@ -32,4 +32,7 @@ COPY entrypoint.sh /usr/local/bin/custom-entrypoint.sh
 RUN chmod +x /usr/local/bin/setup-wordpress.sh /usr/local/bin/custom-entrypoint.sh
 
 ENTRYPOINT ["/usr/local/bin/custom-entrypoint.sh"]
+
+# Re-disable conflicting MPMs to ensure only prefork is active at startup
+RUN a2dismod mpm_event mpm_worker 2>/dev/null || true && a2enmod mpm_prefork
 CMD ["apache2-foreground"]
