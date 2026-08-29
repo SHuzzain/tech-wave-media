@@ -19,10 +19,23 @@ const nextConfig: NextConfig = {
       : [],
   },
   async redirects() {
+    const pageRedirects = [
+      {
+        source: "/pages/write-for-us",
+        destination: "/write-for-us",
+        permanent: true,
+      },
+      {
+        source: "/pages/privacy-policy",
+        destination: "/privacy-policy",
+        permanent: true,
+      },
+    ];
     if (!wordpressUrl) {
-      return [];
+      return pageRedirects;
     }
     return [
+      ...pageRedirects,
       {
         source: "/admin",
         destination: `${wordpressUrl}/wp-admin`,

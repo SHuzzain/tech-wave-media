@@ -1,6 +1,7 @@
 import { Section, Container } from "@/components/craft";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
 import { categoryMenu, contentMenu } from "@/menu.config";
+import { SiteLogo } from "@/components/layout/site-logo";
 import { siteConfig } from "@/site.config";
 import Link from "next/link";
 
@@ -10,8 +11,8 @@ export function Footer() {
       <Section>
         <Container className="grid md:grid-cols-[1.6fr_0.7fr_0.7fr] gap-12">
           <div className="flex flex-col gap-4 not-prose">
-            <Link href="/">
-              <h3 className="font-serif text-2xl">{siteConfig.site_name}</h3>
+            <Link href="/" className="inline-block">
+              <SiteLogo className="h-12 w-auto" height={48} />
             </Link>
             <p className="text-sm text-muted-foreground max-w-xl">
               {siteConfig.site_description}

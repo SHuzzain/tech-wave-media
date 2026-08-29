@@ -312,7 +312,7 @@ export const seedPages: Page[] = [
 <h3>Revisions</h3>
 <p>We may update this notice and publish the new version on this page. Continued use after an update indicates acceptance.</p>
 <h3>Questions</h3>
-<p>Contact us at the email listed on the Contact page.</p>
+<p>Contact us at <a href="mailto:hello@techwavemedia.com">hello@techwavemedia.com</a>.</p>
 `,
       protected: false,
     },

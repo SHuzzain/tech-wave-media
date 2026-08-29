@@ -14,7 +14,7 @@ export default async function Home() {
 
   return (
     <>
-      <Section className="pt-8">
+      <Section className="pt-10">
         <Container className="max-w-6xl">
           <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground mb-2">
             Welcome to {siteConfig.site_name}

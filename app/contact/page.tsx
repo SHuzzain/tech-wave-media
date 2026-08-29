@@ -20,7 +20,7 @@ export default function ContactPage() {
             the form, and one of our editors will get in touch with you shortly.
           </p>
           <h3>Address</h3>
-          <p>Add your office address in WordPress or this page when the client supplies it.</p>
+          <p>Office address will be published here when the client provides it.</p>
           <p>
             Email:{" "}
             <a href={`mailto:${siteConfig.contact_email}`}>

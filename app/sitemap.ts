@@ -50,13 +50,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.4,
     },
     {
-      url: `${siteConfig.site_domain}/pages/write-for-us`,
+      url: `${siteConfig.site_domain}/write-for-us`,
       lastModified: new Date(),
       changeFrequency: "yearly",
       priority: 0.4,
     },
     {
-      url: `${siteConfig.site_domain}/pages/privacy-policy`,
+      url: `${siteConfig.site_domain}/privacy-policy`,
       lastModified: new Date(),
       changeFrequency: "yearly",
       priority: 0.3,

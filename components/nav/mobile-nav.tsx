@@ -6,7 +6,7 @@ import Link, { LinkProps } from "next/link";
 import { useRouter } from "next/navigation";
 
 // Utility Imports
-import { Menu, ArrowRightSquare } from "lucide-react";
+import { Menu } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 // Component Imports
@@ -21,8 +21,8 @@ import {
 } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
 
+import { SiteLogo } from "@/components/layout/site-logo";
 import { mainMenu, contentMenu } from "@/menu.config";
-import { siteConfig } from "@/site.config";
 
 export function MobileNav() {
   const [open, setOpen] = React.useState(false);
@@ -46,8 +46,7 @@ export function MobileNav() {
               className="flex items-center"
               onOpenChange={setOpen}
             >
-              <ArrowRightSquare className="mr-2 h-4 w-4" />
-              <span>{siteConfig.site_name}</span>
+              <SiteLogo className="h-8 w-auto" height={32} />
             </MobileLink>
           </SheetTitle>
         </SheetHeader>

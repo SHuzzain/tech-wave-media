@@ -32,8 +32,8 @@ export const mainMenu: MenuItem[] = [
 
 export const contentMenu: MenuItem[] = [
   { label: "All posts", href: "/posts" },
-  { label: "Write for Us", href: "/pages/write-for-us" },
-  { label: "Privacy Policy", href: "/pages/privacy-policy" },
+  { label: "Write for Us", href: "/write-for-us" },
+  { label: "Privacy Policy", href: "/privacy-policy" },
   { label: "Categories", href: "/posts/categories" },
   { label: "Tags", href: "/posts/tags" },
 ];
