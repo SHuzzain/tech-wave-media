@@ -15,7 +15,8 @@ export function SiteLogo({
       alt={siteConfig.site_name}
       width={Math.round(height * 3.2)}
       height={height}
-      className={cn("h-10 w-auto object-contain", className)}
+      style={{ width: "auto", height: "auto" }}
+      className={cn("max-h-10 object-contain", className)}
       priority
     />
   );

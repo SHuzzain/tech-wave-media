@@ -12,7 +12,7 @@ export function Footer() {
         <Container className="grid md:grid-cols-[1.6fr_0.7fr_0.7fr] gap-12">
           <div className="flex flex-col gap-4 not-prose">
             <Link href="/" className="inline-block">
-              <SiteLogo className="h-12 w-auto" height={48} />
+              <SiteLogo className="max-h-12" height={48} />
             </Link>
             <p className="text-sm text-muted-foreground max-w-xl">
               {siteConfig.site_description}

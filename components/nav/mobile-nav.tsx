@@ -46,7 +46,7 @@ export function MobileNav() {
               className="flex items-center"
               onOpenChange={setOpen}
             >
-              <SiteLogo className="h-8 w-auto" height={32} />
+              <SiteLogo className="max-h-8" height={32} />
             </MobileLink>
           </SheetTitle>
         </SheetHeader>
