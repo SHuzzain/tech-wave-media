@@ -6,7 +6,7 @@ import { ArticleJsonLd, JsonLd } from "@/components/json-ld";
 
 import { Section, Container, Article, Prose } from "@/components/craft";
 import { badgeVariants } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
+import { cn, stripDuplicateFeaturedImage } from "@/lib/utils";
 
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -126,7 +126,14 @@ export default async function Page({
           )}
         </Prose>
 
-        <Article dangerouslySetInnerHTML={{ __html: post.content.rendered }} />
+        <Article
+          dangerouslySetInnerHTML={{
+            __html: stripDuplicateFeaturedImage(
+              post.content.rendered,
+              featuredMedia?.source_url
+            ),
+          }}
+        />
       </Container>
     </Section>
   );
