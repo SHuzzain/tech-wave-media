@@ -206,6 +206,21 @@ describe("POST /api/revalidate", () => {
 
     expect(res.status).toBe(200);
     expect(mockRevalidateTag).toHaveBeenCalledWith("post-42", { expire: 0 });
+    expect(mockRevalidatePath).toHaveBeenCalledWith("/posts/[slug]", "page");
+  });
+
+  it("revalidates the concrete post path from the plugin slug", async () => {
+    const { POST } = await import("@/app/api/revalidate/route");
+    const req = createRequest(
+      {
+        type: "post",
+        data: { id: 42, slug: "hello-world", type: "post", action: "update" },
+      },
+      "test-secret"
+    );
+    await POST(req);
+
+    expect(mockRevalidatePath).toHaveBeenCalledWith("/posts/hello-world");
   });
 
   it("maps plugin term + category taxonomy to category tags", async () => {

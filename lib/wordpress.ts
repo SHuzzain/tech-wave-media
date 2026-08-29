@@ -246,7 +246,8 @@ export async function getPostBySlug(slug: string): Promise<Post | undefined> {
   const posts = await wordpressFetchGraceful<Post[]>(
     "/wp-json/wp/v2/posts",
     [],
-    { slug, _embed: true }
+    { slug, _embed: true },
+    ["wordpress", "posts"]
   );
   return posts[0] ?? seedPosts.find((post) => post.slug === slug);
 }
@@ -332,7 +333,8 @@ export async function getPageBySlug(slug: string): Promise<Page | undefined> {
   const pages = await wordpressFetchGraceful<Page[]>(
     "/wp-json/wp/v2/pages",
     [],
-    { slug }
+    { slug },
+    ["wordpress", "pages"]
   );
   return pages[0] ?? seedPages.find((page) => page.slug === slug);
 }

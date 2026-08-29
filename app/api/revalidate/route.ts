@@ -22,7 +22,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { contentType, contentId } = parseWebhookPayload(requestBody);
+    const { contentType, contentId, slug, postType } =
+      parseWebhookPayload(requestBody);
 
     if (!contentType) {
       return NextResponse.json(
@@ -67,10 +68,20 @@ export async function POST(request: NextRequest) {
           revalidateTag(`author-${contentId}`, { expire: 0 });
         }
       }
-      // "test" and unknown types still refresh the wordpress tag + layout below
-
-      // Also revalidate the entire layout for safety
+      // Tag invalidation alone does not drop statically generated post HTML.
       revalidatePath("/", "layout");
+      revalidatePath("/");
+      revalidatePath("/posts");
+      revalidatePath("/posts/[slug]", "page");
+      revalidatePath("/pages/[slug]", "page");
+      revalidatePath("/posts/categories");
+      if (slug) {
+        if (postType === "page") {
+          revalidatePath(`/pages/${slug}`);
+        } else {
+          revalidatePath(`/posts/${slug}`);
+        }
+      }
 
       return NextResponse.json({
         revalidated: true,
@@ -110,27 +121,33 @@ type WebhookBody = {
   type?: string;
   data?: {
     id?: string | number;
+    slug?: string;
     taxonomy?: string;
+    type?: string;
   };
 };
 
 function parseWebhookPayload(body: WebhookBody): {
   contentType: string | undefined;
   contentId: string | number | undefined;
+  slug: string | undefined;
+  postType: string | undefined;
 } {
   const rawType = body.contentType ?? body.type;
   const contentId = body.contentId ?? body.data?.id;
+  const slug = body.data?.slug;
+  const postType = body.data?.type;
 
   if (rawType === "term") {
     const taxonomy = body.data?.taxonomy;
     if (taxonomy === "category") {
-      return { contentType: "category", contentId };
+      return { contentType: "category", contentId, slug, postType };
     }
     if (taxonomy === "post_tag") {
-      return { contentType: "tag", contentId };
+      return { contentType: "tag", contentId, slug, postType };
     }
-    return { contentType: "term", contentId };
+    return { contentType: "term", contentId, slug, postType };
   }
 
-  return { contentType: rawType, contentId };
+  return { contentType: rawType, contentId, slug, postType };
 }
