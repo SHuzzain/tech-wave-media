@@ -1,22 +1,14 @@
 import { siteConfig } from "@/site.config";
-import { cn } from "@/lib/utils";
 import Image from "next/image";
 
-export function SiteLogo({
-  className,
-  height = 40,
-}: {
-  className?: string;
-  height?: number;
-}) {
+export function SiteLogo({ height = 40 }: { height?: number }) {
   return (
     <Image
       src="/logo.png"
       alt={siteConfig.site_name}
       width={Math.round(height * 3.2)}
       height={height}
-      style={{ width: "auto", height: "auto" }}
-      className={cn("max-h-10 object-contain", className)}
+      style={{ width: "auto", height }}
       priority
     />
   );
