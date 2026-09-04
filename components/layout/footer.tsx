@@ -32,6 +32,12 @@ export function Footer() {
           </div>
           <div className="flex flex-col gap-2 text-sm">
             <h5 className="font-medium text-base">Site</h5>
+            <Link
+              className="hover:underline underline-offset-4"
+              href="/seo-company-in-chennai"
+            >
+              Services (SEO)
+            </Link>
             {contentMenu.map((item) => (
               <Link
                 className="hover:underline underline-offset-4"
