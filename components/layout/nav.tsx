@@ -21,7 +21,7 @@ export function Nav({ className, children, id }: NavProps) {
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <div className="flex justify-between items-center py-3 gap-4">
           <Link className="hover:opacity-80 transition-opacity shrink-0" href="/">
-            <SiteLogo height={64} />
+            <SiteLogo height={100} />
           </Link>
           {children}
           <div className="flex items-center gap-2">
