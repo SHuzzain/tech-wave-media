@@ -1,16 +1,14 @@
-import { getCategoryBySlug, getPostsByCategorySlug } from "@/lib/wordpress";
+import { getCategoryBySlug, getPostsByCategorySlug, getAllCategories } from "@/lib/wordpress";
 import { MagazineCard } from "@/components/posts/magazine-card";
 import { Section, Container, Prose } from "@/components/craft";
 import { notFound } from "next/navigation";
-import { categoryMenu } from "@/menu.config";
 import type { Metadata } from "next";
 
 export const revalidate = 3600;
 
 export async function generateStaticParams() {
-  return categoryMenu
-    .filter((item) => item.slug)
-    .map((item) => ({ slug: item.slug as string }));
+  const categories = await getAllCategories();
+  return categories.map((cat) => ({ slug: cat.slug }));
 }
 
 export async function generateMetadata({

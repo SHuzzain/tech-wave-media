@@ -1,8 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { MobileNav } from "@/components/nav/mobile-nav";
-import { categoryMenu, contentMenu } from "@/menu.config";
+import { ServicesDropdown } from "@/components/nav/services-dropdown";
+import { contentMenu } from "@/menu.config";
 import { SiteLogo } from "@/components/layout/site-logo";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
+import { getNavMenuData } from "@/lib/wordpress";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 
@@ -12,7 +14,9 @@ interface NavProps {
   id?: string;
 }
 
-export function Nav({ className, children, id }: NavProps) {
+export async function Nav({ className, children, id }: NavProps) {
+  const { categories, hasSeoChild } = await getNavMenuData();
+
   return (
     <nav
       className={cn("sticky z-50 top-0 bg-background border-b", className)}
@@ -32,14 +36,16 @@ export function Nav({ className, children, id }: NavProps) {
               <Link href="/write-for-us">Write for Us</Link>
             </Button>
             <ThemeToggle />
-            <MobileNav />
+            <MobileNav categories={categories} hasSeoChild={hasSeoChild} />
           </div>
         </div>
         <div className="hidden md:flex flex-wrap items-center gap-x-1 gap-y-1 border-t py-2 text-sm">
           <Link href="/" className="px-2 py-1 hover:text-primary font-medium">
             Home
           </Link>
-          {categoryMenu.map((item) => (
+
+          {/* Dynamic WordPress Categories */}
+          {categories.map((item) => (
             <Link
               key={item.href}
               href={item.href}
@@ -48,12 +54,10 @@ export function Nav({ className, children, id }: NavProps) {
               {item.label}
             </Link>
           ))}
-          <Link
-            href="/seo-company-in-chennai"
-            className="px-2 py-1 text-muted-foreground hover:text-foreground"
-          >
-            Services
-          </Link>
+
+          {/* Dynamic Services Menu with SEO Child */}
+          <ServicesDropdown hasSeoChild={hasSeoChild} />
+
           <Link
             href="/pages/about"
             className="px-2 py-1 text-muted-foreground hover:text-foreground"

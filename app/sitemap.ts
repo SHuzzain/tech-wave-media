@@ -1,10 +1,12 @@
 import { MetadataRoute } from "next";
-import { getAllPostsForSitemap } from "@/lib/wordpress";
+import { getAllCategories, getAllPostsForSitemap } from "@/lib/wordpress";
 import { siteConfig } from "@/site.config";
-import { categoryMenu } from "@/menu.config";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const posts = await getAllPostsForSitemap();
+  const [posts, categories] = await Promise.all([
+    getAllPostsForSitemap(),
+    getAllCategories(),
+  ]);
 
   const staticUrls: MetadataRoute.Sitemap = [
     {
@@ -76,8 +78,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.5,
   }));
 
-  const categoryUrls: MetadataRoute.Sitemap = categoryMenu.map((item) => ({
-    url: `${siteConfig.site_domain}${item.href}`,
+  const categoryUrls: MetadataRoute.Sitemap = categories.map((cat) => ({
+    url: `${siteConfig.site_domain}/posts/categories/${cat.slug}`,
     lastModified: new Date(),
     changeFrequency: "weekly",
     priority: 0.7,

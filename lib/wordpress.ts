@@ -280,6 +280,51 @@ export async function getAllCategories(): Promise<Category[]> {
   return real.length > 0 ? categories : seedCategories;
 }
 
+export interface NavMenuData {
+  categories: {
+    id: number;
+    label: string;
+    href: string;
+    slug: string;
+  }[];
+  hasSeoChild: boolean;
+  servicesCategory?: Category;
+}
+
+export async function getNavMenuData(): Promise<NavMenuData> {
+  const allCategories = await getAllCategories();
+
+  // Find if a 'services' parent category exists
+  const servicesCat = allCategories.find((c) => c.slug === "services");
+  
+  // Find if 'seo' exists as a child under services or as a category
+  const seoChild = allCategories.find(
+    (c) => c.slug === "seo" && (servicesCat ? c.parent === servicesCat.id : true)
+  );
+
+  // Top-level editorial categories (exclude parent=services, exclude 'services' itself, exclude 'seo' which lives under services)
+  const topCategories = allCategories.filter((c) => {
+    if (servicesCat && (c.id === servicesCat.id || c.parent === servicesCat.id)) {
+      return false;
+    }
+    if (c.slug === "services" || c.slug === "seo" || c.slug === "uncategorized") {
+      return false;
+    }
+    return true;
+  });
+
+  return {
+    categories: topCategories.map((cat) => ({
+      id: cat.id,
+      label: cat.name,
+      href: `/posts/categories/${cat.slug}`,
+      slug: cat.slug,
+    })),
+    hasSeoChild: Boolean(seoChild),
+    servicesCategory: servicesCat,
+  };
+}
+
 export async function getCategoryById(id: number): Promise<Category> {
   return wordpressFetch<Category>(`/wp-json/wp/v2/categories/${id}`);
 }

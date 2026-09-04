@@ -1,9 +1,7 @@
 import {
   getPostsPaginated,
-  getAllAuthors,
   getAllTags,
   getAllCategories,
-  searchAuthors,
   searchTags,
   searchCategories,
 } from "@/lib/wordpress";
@@ -36,7 +34,6 @@ export default async function Page({
   searchParams,
 }: {
   searchParams: Promise<{
-    author?: string;
     tag?: string;
     category?: string;
     page?: string;
@@ -44,16 +41,15 @@ export default async function Page({
   }>;
 }) {
   const params = await searchParams;
-  const { author, tag, category, page: pageParam, search } = params;
+  const { tag, category, page: pageParam, search } = params;
 
   // Handle pagination
   const page = pageParam ? parseInt(pageParam, 10) : 1;
   const postsPerPage = 9;
 
   // Fetch data based on search parameters using efficient pagination
-  const [postsResponse, authors, tags, categories] = await Promise.all([
-    getPostsPaginated(page, postsPerPage, { author, tag, category, search }),
-    search ? searchAuthors(search) : getAllAuthors(),
+  const [postsResponse, tags, categories] = await Promise.all([
+    getPostsPaginated(page, postsPerPage, { tag, category, search }),
     search ? searchTags(search) : getAllTags(),
     search ? searchCategories(search) : getAllCategories(),
   ]);
@@ -66,7 +62,6 @@ export default async function Page({
     const params = new URLSearchParams();
     if (newPage > 1) params.set("page", newPage.toString());
     if (category) params.set("category", category);
-    if (author) params.set("author", author);
     if (tag) params.set("tag", tag);
     if (search) params.set("search", search);
     return `/posts${params.toString() ? `?${params.toString()}` : ""}`;
@@ -88,10 +83,8 @@ export default async function Page({
             <SearchInput defaultValue={search} />
 
             <FilterPosts
-              authors={authors}
               tags={tags}
               categories={categories}
-              selectedAuthor={author}
               selectedTag={tag}
               selectedCategory={category}
             />

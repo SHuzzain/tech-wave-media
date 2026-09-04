@@ -6,7 +6,7 @@ import Link, { LinkProps } from "next/link";
 import { useRouter } from "next/navigation";
 
 // Utility Imports
-import { Menu } from "lucide-react";
+import { Menu, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 // Component Imports
@@ -22,10 +22,26 @@ import {
 import { Separator } from "@/components/ui/separator";
 
 import { SiteLogo } from "@/components/layout/site-logo";
-import { mainMenu, contentMenu } from "@/menu.config";
+import { contentMenu } from "@/menu.config";
 
-export function MobileNav() {
+export interface NavCategoryItem {
+  id: number;
+  label: string;
+  href: string;
+  slug: string;
+}
+
+interface MobileNavProps {
+  categories?: NavCategoryItem[];
+  hasSeoChild?: boolean;
+}
+
+export function MobileNav({
+  categories = [],
+  hasSeoChild = true,
+}: MobileNavProps) {
   const [open, setOpen] = React.useState(false);
+  const [servicesOpen, setServicesOpen] = React.useState(false);
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -54,15 +70,72 @@ export function MobileNav() {
           <div className="flex flex-col space-y-3">
             <h3 className="text-small mt-6">Menu</h3>
             <Separator />
-            {mainMenu.map((item) => (
-              <MobileLink key={item.href} href={item.href} onOpenChange={setOpen}>
-                {item.label}
+
+            {/* Home */}
+            <MobileLink href="/" onOpenChange={setOpen}>
+              Home
+            </MobileLink>
+
+            {/* Dynamic WordPress Categories */}
+            {categories.map((cat) => (
+              <MobileLink key={cat.href} href={cat.href} onOpenChange={setOpen}>
+                {cat.label}
               </MobileLink>
             ))}
+
+            {/* Services with Child Links */}
+            <div>
+              <button
+                onClick={() => setServicesOpen(!servicesOpen)}
+                className="flex items-center justify-between w-full text-lg py-1 hover:text-primary transition-colors text-left"
+              >
+                <span>Services</span>
+                <ChevronDown
+                  className={cn(
+                    "h-4 w-4 mr-4 transition-transform duration-200",
+                    servicesOpen && "rotate-180"
+                  )}
+                />
+              </button>
+
+              {servicesOpen && (
+                <div className="ml-4 mt-2 space-y-2 border-l pl-3">
+                  <MobileLink
+                    href="/seo-company-in-chennai"
+                    onOpenChange={setOpen}
+                    className="text-base text-muted-foreground hover:text-foreground block"
+                  >
+                    SEO Services
+                  </MobileLink>
+                  {hasSeoChild && (
+                    <MobileLink
+                      href="/posts/categories/seo"
+                      onOpenChange={setOpen}
+                      className="text-base text-muted-foreground hover:text-foreground block"
+                    >
+                      SEO Blog & Articles
+                    </MobileLink>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* Static Content Links */}
+            <MobileLink href="/pages/about" onOpenChange={setOpen}>
+              About
+            </MobileLink>
+            <MobileLink href="/contact" onOpenChange={setOpen}>
+              Contact
+            </MobileLink>
+
             <h3 className="text-small pt-6">More</h3>
             <Separator />
             {contentMenu.map((item) => (
-              <MobileLink key={item.href} href={item.href} onOpenChange={setOpen}>
+              <MobileLink
+                key={item.href}
+                href={item.href}
+                onOpenChange={setOpen}
+              >
                 {item.label}
               </MobileLink>
             ))}
