@@ -49,7 +49,7 @@ export function Nav({ className, children, id }: NavProps) {
             </Link>
           ))}
           <Link
-            href="/pages/services"
+            href="/seo-company-in-chennai"
             className="px-2 py-1 text-muted-foreground hover:text-foreground"
           >
             Services

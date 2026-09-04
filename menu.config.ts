@@ -25,7 +25,7 @@ export const categoryMenu: MenuItem[] = [
 export const mainMenu: MenuItem[] = [
   { label: "Home", href: "/" },
   ...categoryMenu,
-  { label: "Services", href: "/pages/services" },
+  { label: "Services", href: "/seo-company-in-chennai" },
   { label: "About", href: "/pages/about" },
   { label: "Contact", href: "/contact" },
 ];

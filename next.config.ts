@@ -21,6 +21,11 @@ const nextConfig: NextConfig = {
   async redirects() {
     const pageRedirects = [
       {
+        source: "/pages/services",
+        destination: "/seo-company-in-chennai",
+        permanent: true,
+      },
+      {
         source: "/pages/write-for-us",
         destination: "/write-for-us",
         permanent: true,
